@@ -41,23 +41,37 @@ function App() {
       </header>
       <div className="contenedor">
         {paso === 1 && (
-          <Paso1 avanzaPaso={avanzaPaso} datosPersonales={datosPersonales} />
+          <Paso1
+            avanzaPaso={avanzaPaso}
+            datosPersonales={datosPersonales}
+            setDatosPersonales={setDatosPersonales}
+          />
         )}
         {paso === 2 && (
           <Paso2
             avanzaPaso={avanzaPaso}
             datosRegistro={datosRegistro}
+            setDatosRegistro={setDatosRegistro}
             retrocedePaso={retrocedePaso}
           />
         )}
         {paso === 3 && (
           <Paso3
             datosAcceso={datosAcceso}
+            datosRegistro={datosRegistro}
+            setDatosAcceso={setDatosAcceso}
             avanzaPaso={avanzaPaso}
             retrocedePaso={retrocedePaso}
           />
         )}
-        {paso === 4 && <Resumen retrocedePaso={retrocedePaso} />}
+        {paso === 4 && (
+          <Resumen
+            retrocedePaso={retrocedePaso}
+            datosPersonales={datosPersonales}
+            datosRegistro={datosRegistro}
+            datosAcceso={datosAcceso}
+          />
+        )}
       </div>
     </>
   );

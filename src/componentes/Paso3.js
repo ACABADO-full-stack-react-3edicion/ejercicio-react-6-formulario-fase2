@@ -1,16 +1,42 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { useFormulario } from "../hooks/useFormulario";
+import {
+  datosAccesoSchema,
+  datosRegistroSchema,
+} from "../schemas/datosSchemas";
 
 export const Paso3 = (props) => {
-  const { datosAcceso, avanzaPaso, retrocedePaso } = props;
+  const {
+    datosRegistro,
+    datosAcceso,
+    setDatosAcceso,
+    avanzaPaso,
+    retrocedePaso,
+  } = props;
   const {
     datos: { username, password, recordarPassword },
     setDato,
+    formularioInvalido,
   } = useFormulario(datosAcceso);
+  const [error, setError] = useState(false);
+  const compruebaLogin = (e) => {
+    e.preventDefault();
+    if (
+      username === datosRegistro.username &&
+      password === datosRegistro.password
+    ) {
+      setDatosAcceso({ username, password, recordarPassword });
+      avanzaPaso();
+      setError(false);
+    } else {
+      setError(true);
+    }
+  };
   return (
     <>
       <h2>Paso 3: Login</h2>
-      <form noValidate onSubmit={avanzaPaso}>
+      <form noValidate onSubmit={compruebaLogin}>
         <div className="form-group">
           <label htmlFor="username">Nombre de usuario:</label>
           <input
@@ -43,12 +69,17 @@ export const Paso3 = (props) => {
             Recordar contraseña
           </label>
         </div>
-        <button className="btn btn-info" onClick={retrocedePaso}>
+        <button type="button" className="btn btn-info" onClick={retrocedePaso}>
           Anterior
         </button>
-        <button className="btn btn-info" type="submit">
+        <button
+          className="btn btn-info"
+          type="submit"
+          disabled={formularioInvalido}
+        >
           Acceder
         </button>
+        {error && <p className="error">Credenciales erróneas</p>}
       </form>
     </>
   );
@@ -57,9 +88,7 @@ export const Paso3 = (props) => {
 Paso3.propTypes = {
   avanzaPaso: PropTypes.func.isRequired,
   retrocedePaso: PropTypes.func.isRequired,
-  datosAcceso: PropTypes.shape({
-    username: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
-    recordarPassword: PropTypes.bool.isRequired,
-  }).isRequired,
+  setDatosAcceso: PropTypes.func.isRequired,
+  datosRegistro: datosRegistroSchema,
+  datosAcceso: datosAccesoSchema,
 };

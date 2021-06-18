@@ -1,16 +1,23 @@
 import PropTypes from "prop-types";
 import { useFormulario } from "../hooks/useFormulario";
+import { datosRegistroSchema } from "../schemas/datosSchemas";
 
 export const Paso2 = (props) => {
-  const { datosRegistro, avanzaPaso, retrocedePaso } = props;
+  const { datosRegistro, setDatosRegistro, avanzaPaso, retrocedePaso } = props;
   const {
     datos: { username, password, repitePassword },
+    formularioInvalido,
     setDato,
   } = useFormulario(datosRegistro);
+  const enviaPaso = (e) => {
+    e.preventDefault();
+    setDatosRegistro({ username, password, repitePassword });
+    avanzaPaso();
+  };
   return (
     <>
       <h2>Paso 2: Datos de acceso</h2>
-      <form noValidate onSubmit={avanzaPaso}>
+      <form noValidate onSubmit={enviaPaso}>
         <div className="form-group">
           <label htmlFor="username">Nombre de usuario:</label>
           <input
@@ -41,10 +48,14 @@ export const Paso2 = (props) => {
             className="form-control"
           />
         </div>
-        <button className="btn btn-info" onClick={retrocedePaso}>
+        <button type="button" className="btn btn-info" onClick={retrocedePaso}>
           Anterior
         </button>
-        <button type="submit" className="btn btn-info">
+        <button
+          type="submit"
+          className="btn btn-info"
+          disabled={formularioInvalido}
+        >
           Siguiente
         </button>
       </form>
@@ -55,9 +66,6 @@ export const Paso2 = (props) => {
 Paso2.propTypes = {
   avanzaPaso: PropTypes.func.isRequired,
   retrocedePaso: PropTypes.func.isRequired,
-  datosRegistro: PropTypes.shape({
-    username: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
-    repitePassword: PropTypes.string.isRequired,
-  }).isRequired,
+  setDatosRegistro: PropTypes.func.isRequired,
+  datosRegistro: datosRegistroSchema,
 };

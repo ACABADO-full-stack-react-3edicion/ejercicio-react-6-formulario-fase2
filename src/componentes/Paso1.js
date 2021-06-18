@@ -1,14 +1,17 @@
 import PropTypes from "prop-types";
 import { useFormulario } from "../hooks/useFormulario";
+import { datosPersonalesSchema } from "../schemas/datosSchemas";
 
 export const Paso1 = (props) => {
-  const { datosPersonales, avanzaPaso } = props;
+  const { datosPersonales, setDatosPersonales, avanzaPaso } = props;
   const {
     datos: { nombre, apellidos, fechaNacimiento, email },
+    formularioInvalido,
     setDato,
   } = useFormulario(datosPersonales);
   const enviaPaso = (e) => {
     e.preventDefault();
+    setDatosPersonales({ nombre, apellidos, fechaNacimiento, email });
     avanzaPaso();
   };
   return (
@@ -56,7 +59,11 @@ export const Paso1 = (props) => {
             className="form-control"
           />
         </div>
-        <button type="submit" className="btn btn-info">
+        <button
+          type="submit"
+          className="btn btn-info"
+          disabled={formularioInvalido}
+        >
           Siguiente
         </button>
       </form>
@@ -65,11 +72,6 @@ export const Paso1 = (props) => {
 };
 
 Paso1.propTypes = {
-  datosPersonales: PropTypes.shape({
-    nombre: PropTypes.string.isRequired,
-    apellidos: PropTypes.string.isRequired,
-    fechaNacimiento: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-  }).isRequired,
+  datosPersonales: datosPersonalesSchema,
   avanzaPaso: PropTypes.func.isRequired,
 };
