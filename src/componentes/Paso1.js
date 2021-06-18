@@ -1,4 +1,6 @@
+import { DateTime } from "luxon";
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { useFormulario } from "../hooks/useFormulario";
 import { datosPersonalesSchema } from "../schemas/datosSchemas";
 
@@ -9,10 +11,18 @@ export const Paso1 = (props) => {
     formularioInvalido,
     setDato,
   } = useFormulario(datosPersonales);
+  const [edad, setEdad] = useState(null);
   const enviaPaso = (e) => {
     e.preventDefault();
     setDatosPersonales({ nombre, apellidos, fechaNacimiento, email });
     avanzaPaso();
+  };
+  const onChangeFechaNacimiento = (e) => {
+    const hoy = DateTime.local();
+    const fechaNacimientoDate = DateTime.fromISO(fechaNacimiento);
+    console.log(fechaNacimientoDate);
+    setEdad(fechaNacimientoDate.diff(hoy, "years"));
+    setDato(e);
   };
   return (
     <>
@@ -43,11 +53,11 @@ export const Paso1 = (props) => {
           <input
             type="date"
             value={fechaNacimiento}
-            onChange={setDato}
+            onChange={onChangeFechaNacimiento}
             id="fechaNacimiento"
             className="form-control"
           />
-          <span>Edad: </span>
+          <span>Edad: {edad}</span>
         </div>
         <div className="form-group">
           <label htmlFor="email">Correo electrónico:</label>
